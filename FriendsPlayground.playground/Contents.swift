@@ -30,16 +30,16 @@ f1.mother?.name = "Margo"
 
 let data = f1.toByteArray()
 
-let f = Friend.fromByteArray(UnsafePointer<UInt8>(data))
+let f = Friend.fromByteArray(UnsafeBufferPointer(start:UnsafePointer<UInt8>(data), count: data.count))
 
 print(f.friends[2]?.friends[0]?.friends[0]?.name)
 
 print(((f.lover as? Female)?.ref?.lover as? Male)?.ref?.name)
 
 
-let lazyF = Friend.LazyAccess(data: data)
+let lazyF = Friend.Fast(data)
 
-let girlFriend = (lazyF.lover as! Female.LazyAccess).ref
-let boyFriend = (girlFriend?.lover as! Male.LazyAccess).ref
+let girlFriend = (lazyF.lover as! Female.Fast).ref
+let boyFriend = (girlFriend?.lover as! Male.Fast).ref
 
 lazyF == boyFriend
